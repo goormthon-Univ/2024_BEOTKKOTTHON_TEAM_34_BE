@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: Kkri
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://kkri.cp4iwmso4y1m.ap-northeast-2.rds.amazonaws.com:3306/Kkri
+    username: sa
+    password: 12341234
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        default_batch_fetch_size: 100
+logging.level:
+    org.hibernate.SQL: debug
