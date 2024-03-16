@@ -1,45 +1,41 @@
 package com.groom.Kkri.entity;
 
+import com.groom.Kkri.enums.State;
+import com.groom.Kkri.enums.Type;
 import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString
+@ToString(of = {"id","title","description","type","state","exchangePoint"})
 @Getter
 public class Board extends BaseTimeEntity{
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
-    String title;
-    String description;
+    private Long id;
+    private String title;
+    private String description;
     @Enumerated(EnumType.STRING)
-    Type type;
+    private Type type;
     @Enumerated(EnumType.STRING)
-    State state;
-    Long exchangePoint;
+    private State state;
+    private Long exchangePoint;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
-    Member writer;
+    private Member member;
 
-    public enum Type{
-        HELPING, HELPED
-    }
-    public enum State{
-        PRE_DEAL,DEALING,POST_DEAL
-    }
 
     @Builder
-    public Board(Long id, String title,String description, Type type, State state, Long exchangePoint, Member member){
-        this.id = id;
+    public Board(String title,String description, Type type, State state, Long exchangePoint, Member member){
         this.title = title;
         this.description = description;
         this.type = type;
         this.state = state;
         this.exchangePoint = exchangePoint;
-        this.writer = member;
-        member.boards.add(this);
+        setMember(member);
     }
 
-
-
+    public void setMember(Member member) {
+        this.member = member;
+        member.getBoards().add(this);
+    }
 }
