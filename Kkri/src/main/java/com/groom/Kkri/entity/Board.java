@@ -38,4 +38,16 @@ public class Board extends BaseTimeEntity{
         this.member = member;
         member.getBoards().add(this);
     }
+
+    public void updateBoard(String title, String description,Long exchangePoint){
+        this.title = title;
+        this.description = description;
+        this.exchangePoint = exchangePoint;
+    }
+    public void updateType(Type type){
+        this.type = type;
+    }
+    public void updateState(State state){
+        this.state = state;
+    }
 }
