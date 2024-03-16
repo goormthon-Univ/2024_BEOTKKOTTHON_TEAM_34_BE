@@ -1,5 +1,7 @@
 package com.groom.Kkri.entity;
 
+import com.groom.Kkri.enums.State;
+import com.groom.Kkri.enums.Type;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +17,7 @@ class BoardTest {
     @Test
     public void makeTest(){
         Member member1 = Member.builder()
-                .id(1L)
+
                 .univ("univ")
                 .nickname("jaejae")
                 .point(2L)
@@ -25,12 +27,12 @@ class BoardTest {
 
 
         Board board = Board.builder()
-                .id(1L)
+
                 .title("skadhfk")
                 .description("hi")
                 .exchangePoint(2L)
-                .type(Board.Type.HELPED)
-                .state(Board.State.PRE_DEAL)
+                .type(Type.HELPED)
+                .state(State.PRE_DEAL)
                 .member(member1)
                 .build();
 
