@@ -9,28 +9,29 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString
+@ToString(of = {"id","username","password","nickname","univ","point","consumePoint","earnPoint"})
 public class Member {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
-    Long id;
+    private Long id;
     @Column(unique = true)
-    String username;
-    String password;
+    private String username;
+    private String password;
     @Column(unique = true)
-    String nickname;
-    String univ;
-    Long point;
-    Long consumePoint;
-    Long earnPoint;
+    private String nickname;
+    private String univ;
+    private Long point;
 
-    @OneToMany(mappedBy = "writer",cascade = CascadeType.ALL)
-    List<Board> boards = new ArrayList<>();
+    private Long consumePoint;
+    private Long earnPoint;
+
+    @OneToMany(mappedBy = "member",cascade = CascadeType.ALL)
+    private List<Board> boards = new ArrayList<>();
 
     @Builder
-    public Member(Long id, String username, String password, String nickname, String univ, Long point){
-        this.id = id;
+    public Member(String username, String password, String nickname, String univ, Long point){
         this.username = username;
+        this.password = password;
         this.nickname = nickname;
         this.univ = univ;
         this.point = point;
