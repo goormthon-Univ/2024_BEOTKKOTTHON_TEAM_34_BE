@@ -1,6 +1,5 @@
-package com.groom.Kkri.domain;
+package com.groom.Kkri.dto;
 
-import com.groom.Kkri.entity.Board;
 import com.groom.Kkri.entity.Board.Type;
 import com.groom.Kkri.entity.Board.State;
 import lombok.*;

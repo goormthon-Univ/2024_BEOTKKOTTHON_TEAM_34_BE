@@ -1,4 +1,4 @@
-package com.groom.Kkri.domain;
+package com.groom.Kkri.dto;
 
 import com.groom.Kkri.entity.Member;
 import lombok.*;
