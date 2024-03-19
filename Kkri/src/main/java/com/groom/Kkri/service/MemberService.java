@@ -3,12 +3,12 @@ package com.groom.Kkri.service;
 import com.groom.Kkri.entity.Member;
 import com.groom.Kkri.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
-@Component
+@Service
 public class MemberService {
 
     private final MemberRepository memberRepository;
@@ -38,4 +38,26 @@ public class MemberService {
         return memberRepository.findAll();
     }
 
+    public boolean login(String username, String password) {
+        Optional<Member> optionalMember = findByUsernameAndPassword(username, password);
+        return optionalMember.isPresent();
+    }
+
+    public boolean signup(Member member) {
+        if (memberRepository.existsByUsername(member.getUsername()) || memberRepository.existsByNickname(member.getNickname())) {
+            return false;
+        }
+
+        memberRepository.save(member);
+        return true;
+    }
+
+
+    public Member getMember(String loginId) {
+        return null;
+    }
+
+    public String getBoardContent(String loginId, String type, String boardId) {
+        return loginId;
+    }
 }
