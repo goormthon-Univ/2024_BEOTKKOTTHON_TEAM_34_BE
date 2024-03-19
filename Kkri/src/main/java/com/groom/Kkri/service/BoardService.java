@@ -30,7 +30,7 @@ public class BoardService {
         return boardRepository.findByType(type);
     }
 
-    public Board createPost(Board board) {
+    public Board createPost(Type type, Board board) {
         return boardRepository.save(board);
     }
 
@@ -38,11 +38,11 @@ public class BoardService {
         return boardRepository.findById(boardId);
     }
 
-    public Board updatePost(Board board) {
+    public Board updatePost(Type type, Long boardId, Board board) {
         return boardRepository.save(board);
     }
 
-    public void deletePost(Long boardId) {
+    public void deletePost(Type type, Long boardId) {
         boardRepository.deleteById(boardId);
     }
 
