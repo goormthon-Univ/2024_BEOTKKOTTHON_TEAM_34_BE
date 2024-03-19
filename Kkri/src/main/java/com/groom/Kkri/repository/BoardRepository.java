@@ -30,4 +30,6 @@ public interface BoardRepository extends JpaRepository<Board,Long> {
     Slice<Board> findByTitleContainingOrDescriptionContaining(@Param("title") String tile, @Param("description")String description, Pageable pageable);
 
     void deleteById(Long id);
+
+    List<Board> findByType(Type type);
 }
