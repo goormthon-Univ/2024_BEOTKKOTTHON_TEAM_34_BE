@@ -5,12 +5,16 @@ import com.groom.Kkri.enums.Type;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(of = {"id","title","description","type","state","exchangePoint"})
 @Getter
 public class Board extends BaseTimeEntity{
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "board_id")
     private Long id;
     private String title;
     private String description;
@@ -22,6 +26,9 @@ public class Board extends BaseTimeEntity{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
+
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
+    private List<ChatRoom> chatRooms = new ArrayList<>();
 
 
     @Builder
