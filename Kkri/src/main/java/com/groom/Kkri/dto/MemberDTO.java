@@ -8,7 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class MyPageDTO {
+public class MemberDTO {
 
     private Long id;
     private String username;
@@ -18,8 +18,8 @@ public class MyPageDTO {
     private Long consumePoint;
     private Long earnPoint;
 
-    public static MyPageDTO from(Member member) {
-        return new MyPageDTO(
+    public static MemberDTO from(Member member) {
+        return new MemberDTO(
                 member.getId(),
                 member.getUsername(),
                 member.getNickname(),
