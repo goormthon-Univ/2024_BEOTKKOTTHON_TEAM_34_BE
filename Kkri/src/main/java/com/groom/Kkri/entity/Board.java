@@ -27,6 +27,9 @@ public class Board extends BaseTimeEntity{
     @JoinColumn(name = "member_id")
     private Member member;
 
+    @OneToMany(mappedBy = "board",cascade = CascadeType.ALL)
+    private List<Attachment> attachments = new ArrayList<>();
+
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
     private List<ChatRoom> chatRooms = new ArrayList<>();
 
