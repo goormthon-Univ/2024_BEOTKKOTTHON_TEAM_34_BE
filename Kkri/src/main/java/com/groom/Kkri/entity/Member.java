@@ -28,8 +28,14 @@ public class Member {
     @OneToMany(mappedBy = "member",cascade = CascadeType.ALL)
     private List<Board> boards = new ArrayList<>();
 
+    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
+    private List<ChatRoom> chatSendRooms = new ArrayList<>();
+
+    @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL)
+    private List<ChatRoom> chatReceiveRooms = new ArrayList<>();
+
     @Builder
-    public Member(String username, String password, String nickname, String univ, Long point){
+    public Member(String username, String password, String nickname, String univ, Long point) {
         this.username = username;
         this.password = password;
         this.nickname = nickname;

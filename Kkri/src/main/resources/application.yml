@@ -6,12 +6,21 @@ spring:
     url: jdbc:mysql://kkri.cp4iwmso4y1m.ap-northeast-2.rds.amazonaws.com:3306/Kkri
     username: sa
     password: 12341234
-
+  data:
+    mongodb:
+      uri: mongodb+srv://sa:12341234@kkri.uirno0z.mongodb.net/kkri?retryWrites=true&w=majority
   jpa:
     hibernate:
       ddl-auto: update
     properties:
       hibernate:
         default_batch_fetch_size: 100
+  servlet:
+    multipart:
+      enabled: true
+      location: C:\tempImage/
+      max-file-size: 10MB
+      max-request-size: 100MB
+      file-size-threshold: 1MB
 logging.level:
     org.hibernate.SQL: debug

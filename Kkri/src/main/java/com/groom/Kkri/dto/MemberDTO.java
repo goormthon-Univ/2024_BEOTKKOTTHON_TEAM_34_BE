@@ -1,4 +1,4 @@
-package com.groom.Kkri.domain;
+package com.groom.Kkri.dto;
 
 import com.groom.Kkri.entity.Member;
 import lombok.*;
@@ -32,7 +32,6 @@ public class MemberDTO {
 
     public Member toEntity() {
         return Member.builder()
-                .id(this.id)
                 .username(this.username)
                 .nickname(this.nickname)
                 .univ(this.univ)

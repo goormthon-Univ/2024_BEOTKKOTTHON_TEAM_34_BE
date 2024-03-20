@@ -39,4 +39,40 @@ class BoardTest {
         Assertions.assertThat(member1.getUniv()).isEqualTo("univ");
         Assertions.assertThat(board.getDescription()).isEqualTo("hi");
     }
+
+    @Test
+    void updateBoard(){
+        Member member1 = Member.builder()
+
+                .univ("univ")
+                .nickname("jaejae")
+                .point(2L)
+                .password("skdfjhsdk")
+                .username("zhsdfa")
+                .build();
+
+
+        Board board = Board.builder()
+
+                .title("skadhfk")
+                .description("hi")
+                .exchangePoint(2L)
+                .type(Type.HELPED)
+                .state(State.PRE_DEAL)
+                .member(member1)
+                .build();
+
+        Board board2 = Board.builder()
+
+                .title("진자 재밌음")
+                .description("컴온")
+                .exchangePoint(5L)
+                .type(Type.HELPED)
+                .state(State.PRE_DEAL)
+                .member(member1)
+                .build();
+
+        board.updateBoard("진자 재밌음","컴온",5L);
+        Assertions.assertThat(board.toString()).isEqualTo(board2.toString());
+    }
 }
