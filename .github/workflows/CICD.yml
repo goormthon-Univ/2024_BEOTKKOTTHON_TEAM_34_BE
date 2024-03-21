@@ -34,9 +34,14 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build Docker
-        run: docker build --platform linux/amd64 -t ${{ secrets.DOCKERHUB_USERNAME }}/kkri .
+        run: |
+          cd Kkri
+          docker build --platform linux/amd64 -t ${{ secrets.DOCKERHUB_USERNAME }}/kkri .
+      
       - name: Push Docker
-        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/kkri:latest
+        run: |
+          cd Kkri
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/kkri:latest
         
   deploy:
     needs: build 
