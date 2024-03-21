@@ -1,4 +1,4 @@
-FROM adoptopenjdk:17-jdk-hotspot
+FROM eclipse-temurin:17-jdk-alpine
 ARG JAR_FILE=build/libs/*.jar
 ARG PROFILES
 ARG ENV
