@@ -4,6 +4,7 @@ on:
   push:
     branches: [ "main" ]
   pull_request:
+    types: [closed]
     branches: [ "main" ]
 permissions:
   contents: read
@@ -78,6 +79,8 @@ jobs:
           script: |
             sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/kkri:latest
             sudo docker-compose -f docker-compose-${{env.TARGET_UPSTREAM}}.yml up -d
+      - name: Output URL
+        run: "Deploy server URL: http://${{ secrets.LIVE_SERVER_IP }}:${{ env.STOPPED_PORT }}/env"
       
       - name: Check deploy server URL
         uses: jtalk/url-health-check-action@v3
@@ -86,6 +89,8 @@ jobs:
           max-attempts: 8
           retry-delay: 15s
 
+      
+      
       - name: Change nginx upstream
         uses: appleboy/ssh-action@master
         with:
