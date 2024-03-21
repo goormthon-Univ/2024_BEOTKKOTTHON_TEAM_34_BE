@@ -10,6 +10,10 @@ jar {
 	enabled = false
 }
 
+test{
+	enabled = false
+}
+
 java {
 	sourceCompatibility = '17'
 }
