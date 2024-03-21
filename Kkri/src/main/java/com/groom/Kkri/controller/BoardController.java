@@ -1,10 +1,17 @@
 package com.groom.Kkri.controller;
 
+import com.groom.Kkri.dto.BoardPageDto;
 import com.groom.Kkri.entity.Board;
 import com.groom.Kkri.enums.State;
 import com.groom.Kkri.enums.Type;
 import com.groom.Kkri.service.BoardService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,13 +20,19 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/board")
+@RequiredArgsConstructor
+@Tag(name = "board")
 public class BoardController {
 
     private final BoardService boardService;
 
-    @Autowired
-    public BoardController(BoardService boardService) {
-        this.boardService = boardService;
+
+    @Operation(summary = "게시판을 가져오는 api",description = "")
+    @GetMapping("/{type}")
+    public ResponseEntity<BoardPageDto> getBoard(@PathVariable("type") Type type, @PageableDefault(size = 5, sort = "createdDate",
+            direction = Sort.Direction.DESC)Pageable pageable)
+    {
+        return ResponseEntity.ok(boardService.getBoard(type,pageable));
     }
 
     // GET endpoint to retrieve the list of posts with optional search parameters
@@ -30,11 +43,11 @@ public class BoardController {
     }
 
     // GET endpoint to view the list of posts by bulletin board type
-    @GetMapping("/{type}")
-    public ResponseEntity<List<Board>> getPostListByType(@PathVariable Type type) {
-        List<Board> postList = boardService.getPostsByType(type);
-        return ResponseEntity.ok(postList);
-    }
+//    @GetMapping("/{type}")
+//    public ResponseEntity<List<Board>> getPostListByType(@PathVariable Type type) {
+//        List<Board> postList = boardService.getPostsByType(type);
+//        return ResponseEntity.ok(postList);
+//    }
 
     // POST endpoint to write a new post
     @PostMapping("/{type}")
