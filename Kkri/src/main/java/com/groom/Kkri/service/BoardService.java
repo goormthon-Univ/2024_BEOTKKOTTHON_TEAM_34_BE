@@ -28,8 +28,6 @@ public class BoardService {
         return new BoardPageDto(boardRepository.findByType(type,pageable));
     }
 
-
-
     public List<Board> getAllPosts() {
         return boardRepository.findAll();
     }
@@ -38,6 +36,7 @@ public class BoardService {
         return boardRepository.findByType(type);
     }
 
+    @Transactional
     public Board createPost(Type type, Board board) {
         return boardRepository.save(board);
     }
