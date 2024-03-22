@@ -28,7 +28,7 @@ public class AttachmentController {
 
     @GetMapping
     @Operation(summary = "게시판에 관련된 이미지를 가져오는 api", description = "")
-    public ResponseEntity<List<AttachmentOutputDto>> getAttachment(@RequestParam("boardId") Long boardId){
+    public ResponseEntity<List<String>> getAttachment(@RequestParam("boardId") Long boardId){
         return ResponseEntity.ok(attachmentService.getImages(boardId));
     }
 
@@ -40,14 +40,14 @@ public class AttachmentController {
 
     @PostMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     @Operation(summary = "게시판에 이미지를 저장하는 api", description = "테스트용 쓰이진 않을 듯")
-    public ResponseEntity<String> storeAttachment(@RequestParam("boardId") Long boardId , @RequestParam("images") List<MultipartFile> multipartFiles) throws IOException {
+    public ResponseEntity<List<String>> storeAttachment(@RequestParam("boardId") Long boardId , @RequestParam("images") List<MultipartFile> multipartFiles) throws IOException {
         System.out.println(boardId);
         for(var s : multipartFiles){
             log.info(s.getInputStream().toString());
         }
         try{
-            attachmentService.storeImages(multipartFiles,boardId);
-            return ResponseEntity.ok("success");
+//            attachmentService.storeImages(multipartFiles, boardId);
+            return ResponseEntity.ok(attachmentService.storeImages(multipartFiles, boardId));
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
@@ -57,8 +57,8 @@ public class AttachmentController {
     @Operation(summary = "게시판에 이미지를 수정하는 api", description = "테스트용 쓰이진 않을 듯")
     public ResponseEntity<String> updateAttachment(@RequestParam("imageId") Long imageId , @RequestParam("image") MultipartFile image){
         try{
-            attachmentService.updateImage(imageId,image);
-            return ResponseEntity.ok("success");
+//            attachmentService.updateImage(imageId,image);
+            return ResponseEntity.ok(attachmentService.updateImage(imageId,image));
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
