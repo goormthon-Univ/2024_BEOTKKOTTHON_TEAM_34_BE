@@ -1,67 +1,14 @@
 spring:
-  profiles:
-    active: local
-    group:
-      local: local,common,secret
-      blue: blue,common,secret
-      green: green,common,secret
-
-server:
-  env: blue
-
----
-
-spring:
-  config:
-    activate:
-      on-profile: local
-
-server:
-  port: 8080
-  address: localhost
-
-serverName: local_server
-
----
-spring:
-  config:
-    activate:
-      on-profile: blue
-
-server:
-  port: 8081
-  address: 52.79.139.132
-
-serverName: blue_server
-
----
-spring:
-  config:
-    activate:
-      on-profile: green
-
-server:
-  port: 8082
-  address: 52.79.139.132
-
-serverName: green_server
-
----
-
-spring:
-  config:
-    activate:
-      on-profile: common
   application:
     name: Kkri
-#  datasource:
-#    driver-class-name: com.mysql.cj.jdbc.Driver
-#    url: jdbc:mysql://kkri.cp4iwmso4y1m.ap-northeast-2.rds.amazonaws.com:3306/Kkri
-#    username: sa
-#    password: 12341234
-#  data:
-#    mongodb:
-#      uri: mongodb+srv://sa:12341234@kkri.uirno0z.mongodb.net/kkri?retryWrites=true&w=majority
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://kkri.cp4iwmso4y1m.ap-northeast-2.rds.amazonaws.com:3306/Kkri
+    username: sa
+    password: 12341234
+  data:
+    mongodb:
+      uri: mongodb+srv://sa:12341234@kkri.uirno0z.mongodb.net/kkri?retryWrites=true&w=majority
   jpa:
     hibernate:
       ddl-auto: update
