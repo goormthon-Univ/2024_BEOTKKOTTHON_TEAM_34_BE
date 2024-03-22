@@ -1,5 +1,8 @@
 package com.groom.Kkri.service;
 
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.groom.Kkri.config.S3Config;
 import com.groom.Kkri.dto.attach.AttachmentUpdateDto;
 import com.groom.Kkri.dto.attach.AttachmentOutputDto;
 import com.groom.Kkri.entity.Attachment;
@@ -24,9 +27,13 @@ import java.util.UUID;
 public class AttachmentService {
     private final AttachmentRepository attachmentRepository;
     private final BoardRepository boardRepository;
+    private final S3Config s3Config;
 
     @Value("${spring.servlet.multipart.location}")
     private String fileDir;
+
+    @Value("${cloud.aws.s3.bucket}")
+    private String bucket;
 
 
     private String getFullPath(String filename){
@@ -34,31 +41,45 @@ public class AttachmentService {
     }
 
     @Transactional
-    public void storeImages(List<MultipartFile> multipartFiles, Long boardId) throws IOException {
+    public List<String> storeImages(List<MultipartFile> multipartFiles, Long boardId) throws IOException {
+        List<String> result = new ArrayList<>();
         for(var s : multipartFiles){
-            store(s,boardId);
-        }
-    }
-
-    public List<AttachmentOutputDto> getImages(Long boardId){
-        List<AttachmentOutputDto> result = new ArrayList<>();
-        for (Attachment attachment : attachmentRepository.findByBoardId(boardId)) {
-            result.add(new AttachmentOutputDto(attachment));
+            result.add(store(s,boardId));
         }
         return result;
     }
 
+    public List<String> getImages(Long boardId){
+//        List<AttachmentOutputDto> result = new ArrayList<>();
+//        for (Attachment attachment : attachmentRepository.findByBoardId(boardId)) {
+//            result.add(new AttachmentOutputDto(attachment));
+//        }
+
+        List<String> result = new ArrayList<>();
+        for (Attachment attachment : attachmentRepository.findByBoardId(boardId)) {
+            File file = new File(getFullPath(attachment.getUploadFileName()));
+            String s3Url = getS3Url(attachment.getUploadFileName(), file);
+            result.add(s3Url);
+        }
+
+
+        return result;
+    }
+
     @Transactional
-    public void updateImage(Long imageId,MultipartFile image) throws IOException {
+    public String updateImage(Long imageId,MultipartFile image) throws IOException {
         Attachment attachment = attachmentRepository.findById(imageId).get();
 
         attachment.setStoreFileName(image.getOriginalFilename());
 
         File file = new File(getFullPath(attachment.getUploadFileName()));
         image.transferTo(file);
+
+        String s3Url = getS3Url(attachment.getUploadFileName(), file);
+        return s3Url;
     }
 
-    private void store(MultipartFile image,Long boardId) throws IOException {
+    private String store(MultipartFile image,Long boardId) throws IOException {
         Board board = boardRepository.findById(boardId).get();
         String originalFilename = image.getOriginalFilename();
         String uploadFileName = createStoreFilename(originalFilename);
@@ -72,7 +93,19 @@ public class AttachmentService {
         File uploadedFile = new File(getFullPath(uploadFileName));
         image.transferTo(uploadedFile);
 
+        String s3Url = getS3Url(uploadFileName, uploadedFile);
+
+        uploadedFile.delete();
+
         attachmentRepository.save(attachment);
+
+        return s3Url;
+    }
+
+    private String getS3Url(String uploadFileName, File uploadedFile) {
+        s3Config.amazonS3Client().putObject(new PutObjectRequest(bucket, uploadFileName, uploadedFile).withCannedAcl(CannedAccessControlList.PublicRead));
+        String s3Url = s3Config.amazonS3Client().getUrl(bucket, uploadFileName).toString();
+        return s3Url;
     }
 
     private String createStoreFilename(String originalFilename) {
