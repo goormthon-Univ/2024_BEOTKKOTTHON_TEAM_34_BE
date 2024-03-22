@@ -29,4 +29,8 @@ public class Attachment {
         board.getAttachments().add(this);
     }
 
+    public void setStoreFileName(String fileName){
+        this.storeFileName = fileName;
+    }
+
 }
