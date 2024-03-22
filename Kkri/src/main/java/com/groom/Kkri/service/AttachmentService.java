@@ -3,7 +3,6 @@ package com.groom.Kkri.service;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.groom.Kkri.config.S3Config;
-import com.groom.Kkri.dto.attach.AttachmentUpdateDto;
 import com.groom.Kkri.dto.attach.AttachmentOutputDto;
 import com.groom.Kkri.entity.Attachment;
 import com.groom.Kkri.entity.Board;
@@ -49,17 +48,17 @@ public class AttachmentService {
         return result;
     }
 
-    public List<String> getImages(Long boardId){
+    public List<AttachmentOutputDto> getImages(Long boardId){
 //        List<AttachmentOutputDto> result = new ArrayList<>();
 //        for (Attachment attachment : attachmentRepository.findByBoardId(boardId)) {
 //            result.add(new AttachmentOutputDto(attachment));
 //        }
 
-        List<String> result = new ArrayList<>();
+        List<AttachmentOutputDto> result = new ArrayList<>();
         for (Attachment attachment : attachmentRepository.findByBoardId(boardId)) {
-            File file = new File(getFullPath(attachment.getUploadFileName()));
-            String s3Url = getS3Url(attachment.getUploadFileName(), file);
-            result.add(s3Url);
+//            File file = new File(getFullPath(attachment.getUploadFileName()));
+//            String s3Url = getS3Url(attachment.getUploadFileName(), file);
+            result.add(new AttachmentOutputDto(attachment.getId(),attachment.getS3url()));
         }
 
 
@@ -74,8 +73,10 @@ public class AttachmentService {
 
         File file = new File(getFullPath(attachment.getUploadFileName()));
         image.transferTo(file);
+        file.delete();
 
         String s3Url = getS3Url(attachment.getUploadFileName(), file);
+        attachment.setS3url(s3Url);
         return s3Url;
     }
 
@@ -84,18 +85,20 @@ public class AttachmentService {
         String originalFilename = image.getOriginalFilename();
         String uploadFileName = createStoreFilename(originalFilename);
 
-        Attachment attachment = Attachment.builder()
-                .board(board)
-                .storeFileName(originalFilename)
-                .uploadFileName(uploadFileName)
-                .build();
-
         File uploadedFile = new File(getFullPath(uploadFileName));
         image.transferTo(uploadedFile);
 
         String s3Url = getS3Url(uploadFileName, uploadedFile);
 
         uploadedFile.delete();
+
+
+        Attachment attachment = Attachment.builder()
+                .board(board)
+                .storeFileName(originalFilename)
+                .uploadFileName(uploadFileName)
+                .s3url(s3Url)
+                .build();
 
         attachmentRepository.save(attachment);
 
