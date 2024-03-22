@@ -7,12 +7,12 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class AttachmentOutputDto {
-    private Long id;
-    private String storeFileName;
+    private Long imageId;
+    private String fileUrl;
 
-    public AttachmentOutputDto(Attachment attachment) {
-        this.id = attachment.getId();
-        this.storeFileName = attachment.getStoreFileName();
+    public AttachmentOutputDto(Long imageId, String fileUrl) {
+        this.imageId = imageId;
+        this.fileUrl = fileUrl;
     }
 
 }
