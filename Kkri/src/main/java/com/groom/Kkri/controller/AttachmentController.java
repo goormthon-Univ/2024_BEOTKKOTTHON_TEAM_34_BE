@@ -15,7 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 
-@Slf4j
 @RestController
 @RequiredArgsConstructor
 @Tag(name = "이미지 관련 api")
@@ -38,10 +37,7 @@ public class AttachmentController {
     @PostMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     @Operation(summary = "게시판에 이미지를 저장하는 api", description = "테스트용 쓰이진 않을 듯")
     public ResponseEntity<List<String>> storeAttachment(@RequestParam("boardId") Long boardId , @RequestParam("images") List<MultipartFile> multipartFiles) throws IOException {
-        System.out.println(boardId);
-        for(var s : multipartFiles){
-            log.info(s.getInputStream().toString());
-        }
+
         try{
 //            attachmentService.storeImages(multipartFiles, boardId);
             return ResponseEntity.ok(attachmentService.storeImages(multipartFiles, boardId));
