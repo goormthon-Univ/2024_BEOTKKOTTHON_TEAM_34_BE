@@ -18,8 +18,6 @@ class MemberRepositoryTest {
     @Autowired
     MemberRepository memberRepository;
 
-
-
     @Test
     @Rollback(value = false)
     void test(){

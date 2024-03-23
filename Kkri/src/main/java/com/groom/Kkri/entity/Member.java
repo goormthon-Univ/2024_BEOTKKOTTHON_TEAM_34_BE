@@ -41,7 +41,6 @@ public class Member {
         this.nickname = nickname;
         this.univ = univ;
         this.point = point;
-
     }
 
 }
