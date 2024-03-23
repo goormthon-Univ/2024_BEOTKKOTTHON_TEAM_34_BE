@@ -1,12 +1,14 @@
 package com.groom.Kkri.service;
 
-import com.groom.Kkri.dto.member.LoginInfoDto;
+import com.groom.Kkri.dto.member.HomeUserInfoDto;
+import com.groom.Kkri.dto.member.MemberDto;
 import com.groom.Kkri.dto.member.MyPageDto;
 import com.groom.Kkri.dto.member.SignUpDto;
 import com.groom.Kkri.entity.Member;
 import com.groom.Kkri.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -33,11 +35,13 @@ public class MemberService {
         return memberRepository.existsByNickname(nickname);
     }
 
-    public boolean login(String username, String password) {
+    public Long login(String username, String password) {
         Optional<Member> optionalMember = memberRepository.findByUsernameAndPassword(username, password);
-        return optionalMember.isPresent();
+        return optionalMember.map(Member::getId).orElse(null);
     }
 
+
+    @Transactional
     public boolean signup(SignUpDto signUpDto) {
         if (memberRepository.existsByUsername(signUpDto.getUsername()) || memberRepository.existsByNickname(signUpDto.getNickname())) {
             return false; // 이미 존재하는 회원이므로 가입 실패
@@ -53,14 +57,15 @@ public class MemberService {
 
         return true; // 회원가입 성공
     }
-    public Optional<LoginInfoDto> getLoginInfo(String username) {
-        Optional<Member> memberOptional = memberRepository.findByUsername(username);
-        return memberOptional.map(LoginInfoDto::from);
+    public HomeUserInfoDto getHomeInfo(Long userId){
+        Member member = memberRepository.findById(userId).get();
+        return new HomeUserInfoDto(member);
     }
 
-    public Optional<MyPageDto> getMyPageInfo(String loginId) {
+
+    public Optional<MyPageDto> getMyPageInfo(String username) {
         // loginId를 사용하여 해당 사용자의 정보를 데이터베이스에서 조회
-        Optional<Member> memberOptional = memberRepository.findByUsername(loginId);
+        Optional<Member> memberOptional = memberRepository.findByUsername(username);
 
         // 사용자 정보가 존재할 경우 MyPageDto로 변환하여 Optional로 반환
         return memberOptional.map(member -> MyPageDto.builder()
@@ -71,9 +76,5 @@ public class MemberService {
                 .earnPoint(member.getEarnPoint())
                 .build());
     }
-
-
-
-
 
 }
