@@ -60,4 +60,7 @@ public class Board extends BaseTimeEntity{
     public void updateState(State state){
         this.state = state;
     }
+    public void setState(State state){
+        this.state = state;
+    }
 }

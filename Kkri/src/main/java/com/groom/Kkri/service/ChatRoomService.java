@@ -6,6 +6,8 @@ import com.groom.Kkri.dto.message.ChatMsgAndRoomDto;
 import com.groom.Kkri.entity.Board;
 import com.groom.Kkri.entity.ChatRoom;
 import com.groom.Kkri.entity.Member;
+import com.groom.Kkri.enums.State;
+import com.groom.Kkri.enums.Type;
 import com.groom.Kkri.repository.BoardRepository;
 import com.groom.Kkri.repository.ChatRoomRepository;
 import com.groom.Kkri.repository.MemberRepository;
@@ -16,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -25,7 +28,48 @@ public class ChatRoomService {
     private final MemberRepository memberRepository;
     private final BoardRepository boardRepository;
 
-    //가져오기 2개
+    @Transactional
+    public boolean exchangePoint(Long roomId){
+        ChatRoom chatRoom = chatRoomRepository.findById(roomId).get();
+
+        Member sender = chatRoom.getSender();
+        Member receiver = chatRoom.getReceiver();
+        Long exchangePoint = chatRoom.getBoard().getExchangePoint();
+
+        if(chatRoom.getBoard().getState().equals(State.POST_DEAL)){
+            return false;
+        }
+
+        if(sender.getPoint() < exchangePoint || receiver.getPoint() < exchangePoint){
+            return false;
+        }
+
+        if(chatRoom.getBoard().getType().equals(Type.HELPED)){
+            sender.helping(exchangePoint);
+            receiver.helped(exchangePoint);
+        }
+        else{
+            receiver.helping(exchangePoint);
+            sender.helped(exchangePoint);
+        }
+
+        chatRoom.getBoard().setState(State.POST_DEAL);
+
+        return true;
+    }
+
+    @Transactional
+    public boolean exchangeState(Long roomId, State state) {
+        ChatRoom chatRoom = chatRoomRepository.findById(roomId).get();
+        Board board = chatRoom.getBoard();
+
+        if(board.getState().equals(State.POST_DEAL)){
+            return false;
+        }
+        board.setState(state);
+
+        return true;
+    }
 
     public ChatRoomDetailDto getChatRoomSendId(Long boardId, Long senderId){
 

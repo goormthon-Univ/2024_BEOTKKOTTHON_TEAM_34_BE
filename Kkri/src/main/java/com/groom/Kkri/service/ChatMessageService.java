@@ -62,6 +62,8 @@ public class ChatMessageService {
 
         chatMessageRepository.save(chatMessage);
 
+        room.updateLatestMessage(chatMsgAndRoomDto.getMessage());
+
         return new ChatMessageDto(chatMessage);
     }
 }

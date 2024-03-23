@@ -74,7 +74,7 @@ public class BoardController {
     @PutMapping(value = "/{boardId}",consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     public BaseResponse<?> updateBoard(@PathVariable("boardId")Long boardId, @RequestPart(value = "boardUpdateDto") BoardUpdateDto boardUpdateDto,@RequestPart(value = "images") List<AttachmentUpdateDto> images) throws IOException {
         //boardService.updateBoard(boardId,boardUpdateDto,images);
-        return BaseResponse.response("");
+        return BaseResponse.response("success");
     }
 
 
@@ -82,14 +82,14 @@ public class BoardController {
     @PostMapping(value = "/{userId}",consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     public BaseResponse<?> createBoard(@PathVariable("userId")Long userId,@RequestPart(value = "boardCreateDto")BoardCreateDto boardCreateDto,  @RequestPart(value = "images") List<MultipartFile> images) throws IOException {
         boardService.createBoard(userId,boardCreateDto,images);
-        return BaseResponse.response("");
+        return BaseResponse.response("success");
     }
 
     @Operation(summary = "게시판 삭제 api")
     @DeleteMapping("/{boardId}")
     public BaseResponse<?> deleteBoard(@PathVariable("boardId") Long boardId){
         boardService.deletePost(boardId);
-        return BaseResponse.response("");
+        return BaseResponse.response("success");
     }
 
 
