@@ -1,5 +1,6 @@
 package com.groom.Kkri.entity;
 
+import com.groom.Kkri.enums.Type;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -41,7 +42,14 @@ public class Member {
         this.nickname = nickname;
         this.univ = univ;
         this.point = point;
-
     }
 
+    public void helping(Long exchangePoint){
+        point += exchangePoint;
+        earnPoint += exchangePoint;
+    }
+    public void helped(Long exchangePoint){
+        point -= exchangePoint;
+        consumePoint += exchangePoint;
+    }
 }

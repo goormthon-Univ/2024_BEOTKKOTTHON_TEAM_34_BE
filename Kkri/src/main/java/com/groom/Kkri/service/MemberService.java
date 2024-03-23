@@ -1,9 +1,14 @@
 package com.groom.Kkri.service;
 
+import com.groom.Kkri.dto.member.HomeUserInfoDto;
+import com.groom.Kkri.dto.member.MemberDto;
+import com.groom.Kkri.dto.member.MyPageDto;
+import com.groom.Kkri.dto.member.SignUpDto;
 import com.groom.Kkri.entity.Member;
 import com.groom.Kkri.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,10 +27,6 @@ public class MemberService {
         return memberRepository.findByUsernameAndPassword(username, password);
     }
 
-    public Optional<Member> findByUsername(String username) {
-        return memberRepository.findByUsername(username);
-    }
-
     public boolean existsByUsername(String username) {
         return memberRepository.existsByUsername(username);
     }
@@ -34,30 +35,45 @@ public class MemberService {
         return memberRepository.existsByNickname(nickname);
     }
 
-    public List<Member> findAll() {
-        return memberRepository.findAll();
+    public Long login(String username, String password) {
+        Optional<Member> optionalMember = memberRepository.findByUsernameAndPassword(username, password);
+        return optionalMember.map(Member::getId).orElse(null);
     }
 
-    public boolean login(String username, String password) {
-        Optional<Member> optionalMember = findByUsernameAndPassword(username, password);
-        return optionalMember.isPresent();
-    }
 
-    public boolean signup(Member member) {
-        if (memberRepository.existsByUsername(member.getUsername()) || memberRepository.existsByNickname(member.getNickname())) {
-            return false;
+    @Transactional
+    public boolean signup(SignUpDto signUpDto) {
+        if (memberRepository.existsByUsername(signUpDto.getUsername()) || memberRepository.existsByNickname(signUpDto.getNickname())) {
+            return false; // 이미 존재하는 회원이므로 가입 실패
         }
 
+        // 존재하지 않는 경우 회원 정보를 저장
+        Member member = Member.builder()
+                .nickname(signUpDto.getNickname())
+                .username(signUpDto.getUsername())
+                .password(signUpDto.getPassword())
+                .build();
         memberRepository.save(member);
-        return true;
+
+        return true; // 회원가입 성공
+    }
+    public HomeUserInfoDto getHomeInfo(Long userId){
+        Member member = memberRepository.findById(userId).get();
+        return new HomeUserInfoDto(member);
     }
 
 
-    public Member getMember(String loginId) {
-        return null;
+    public Optional<MyPageDto> getMyPageInfo(Long userId) {
+
+        Optional<Member> memberOptional = memberRepository.findById(userId);
+
+        return memberOptional.map(member -> MyPageDto.builder()
+                .nickname(member.getNickname())
+                .univ(member.getUniv())
+                .point(member.getPoint())
+                .consumePoint(member.getConsumePoint())
+                .earnPoint(member.getEarnPoint())
+                .build());
     }
 
-    public String getBoardContent(String loginId, String type, String boardId) {
-        return loginId;
-    }
 }

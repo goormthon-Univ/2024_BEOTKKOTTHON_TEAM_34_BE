@@ -1,14 +1,21 @@
 package com.groom.Kkri.controller;
 
+import com.groom.Kkri.dto.BaseResponse;
+import com.groom.Kkri.dto.member.HomeUserInfoDto;
+import com.groom.Kkri.dto.member.MyPageDto;
+import com.groom.Kkri.dto.member.SignUpDto;
+import com.groom.Kkri.service.MemberService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.groom.Kkri.entity.Member;
-import com.groom.Kkri.service.MemberService;
+
+import java.util.Optional;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/user")
+@Tag(name = "member")
 public class MemberController {
 
     private final MemberService memberService;
@@ -18,46 +25,64 @@ public class MemberController {
         this.memberService = memberService;
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestParam("username") String username, @RequestParam("password") String password) {
-        boolean loginSuccessful = memberService.login(username, password);
-        if (loginSuccessful) {
-            return ResponseEntity.ok("로그인 성공");
+    @Operation(summary = "로그인 api")
+    @GetMapping("/login")
+    public BaseResponse<?> login(@RequestParam("username") String username, @RequestParam("password") String password) {
+        Long loginSuccessful = memberService.login(username, password);
+        if (loginSuccessful != null) {
+            return BaseResponse.response(loginSuccessful);
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인 실패");
+            return BaseResponse.response(-1);
         }
     }
 
-    @PostMapping("/signup")
-    public ResponseEntity<Void> signup(@RequestBody Member member) {
-        boolean signupSuccessful = memberService.signup(member);
+    @Operation(summary = "아이디 중복 체크 api")
+    @GetMapping("/idCheck")
+    public BaseResponse<String> check(@RequestParam("username") String username) {
+        boolean existsByUsername = memberService.existsByUsername(username);
+        if (existsByUsername) {
+            return BaseResponse.response("fail");
+        } else {
+            return BaseResponse.response("success");
+        }
+    }
+
+    @Operation(summary = "닉네임 중복 체크 api")
+    @GetMapping("/nickCheck")
+    public BaseResponse<String> nickCheck(@RequestParam("nickname") String nickname) {
+        boolean existsByNickname = memberService.existsByNickname(nickname);
+        if (existsByNickname) {
+            return BaseResponse.response("fail");
+        } else {
+            return BaseResponse.response("success");
+        }
+    }
+
+    @Operation(summary = "회원가입 api", description = "")
+    @PostMapping("/join")
+    public BaseResponse<?> signup(@RequestBody SignUpDto signUpDto) {
+        boolean signupSuccessful = memberService.signup(signUpDto);
         if (signupSuccessful) {
-            return ResponseEntity.status(HttpStatus.CREATED).build();
+            return BaseResponse.response("success");
         } else {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+            return BaseResponse.response("fail");
         }
     }
 
-    @GetMapping("/{loginId}/mypage")
-    public ResponseEntity<Member> myPage(@PathVariable("loginId") String loginId) {
-        Member member = memberService.getMember(loginId);
-        if (member != null) {
-            return ResponseEntity.ok(member);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    @Operation(summary = "메인 홈화면 상단 회원 정보 api")
+    @GetMapping("/loginInfo")
+    public BaseResponse<HomeUserInfoDto> loginInfo(@RequestParam("userId") Long userId) {
+        HomeUserInfoDto homeInfo = memberService.getHomeInfo(userId);
+        return BaseResponse.response(homeInfo);
     }
 
-    @GetMapping("/{loginId}/board/{type}/boardno/{boardId}")
-    public ResponseEntity<String> getMyBoard(@PathVariable("loginId") String loginId,
-                                             @PathVariable("type") String type,
-                                             @PathVariable("boardId") String boardId) {
-        // Logic to fetch member's board based on type and boardId
-        String boardContent = memberService.getBoardContent(loginId, type, boardId);
-        if (boardContent != null) {
-            return ResponseEntity.ok(boardContent);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    @Operation(summary = "마이페이지 조회 api")
+    @GetMapping("/{username}/mypage")
+    public BaseResponse<MyPageDto> myPage(@PathVariable("username") Long userId) {
+        Optional<MyPageDto> myPageDtoOptional = memberService.getMyPageInfo(userId);
+
+        return myPageDtoOptional.map(BaseResponse::response)
+                .orElse(new BaseResponse<>(HttpStatus.NOT_FOUND, "마이페이지를 찾을 수 없습니다.", null));
     }
+
 }

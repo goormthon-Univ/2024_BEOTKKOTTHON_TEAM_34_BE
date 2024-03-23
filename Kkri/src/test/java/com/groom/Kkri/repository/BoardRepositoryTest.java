@@ -156,7 +156,7 @@ class BoardRepositoryTest {
         PageRequest pageRequest = PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC, "createdDate"));
 
         Optional<Member> sim = memberRepository.findByUsername("sim");
-        Slice<Board> byUserBoard = boardRepository.findByUserBoard(sim.get().getUsername(), Type.HELPED, pageRequest);
+        Slice<Board> byUserBoard = boardRepository.findByUserBoard(sim.get().getId(), Type.HELPED, pageRequest);
 
         for(var s : byUserBoard.getContent()){
             System.out.println(s.getTitle());
