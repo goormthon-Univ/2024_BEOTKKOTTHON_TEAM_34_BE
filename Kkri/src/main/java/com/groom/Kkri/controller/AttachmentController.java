@@ -28,18 +28,12 @@ public class AttachmentController {
         return ResponseEntity.ok(attachmentService.getImages(boardId));
     }
 
-//    @PostMapping(value = "/test",consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
-//    @Operation(summary = "test")
-//    public void test(@RequestPart("file") MultipartFile file) {
-//        System.out.println(file.getOriginalFilename());
-//    }
 
     @PostMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     @Operation(summary = "게시판에 이미지를 저장하는 api", description = "테스트용 쓰이진 않을 듯")
     public ResponseEntity<List<String>> storeAttachment(@RequestParam("boardId") Long boardId , @RequestParam("images") List<MultipartFile> multipartFiles) throws IOException {
 
         try{
-//            attachmentService.storeImages(multipartFiles, boardId);
             return ResponseEntity.ok(attachmentService.storeImages(multipartFiles, boardId));
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
@@ -50,7 +44,6 @@ public class AttachmentController {
     @Operation(summary = "게시판에 이미지를 수정하는 api", description = "테스트용 쓰이진 않을 듯")
     public ResponseEntity<String> updateAttachment(@RequestParam("imageId") Long imageId , @RequestParam("image") MultipartFile image){
         try{
-//            attachmentService.updateImage(imageId,image);
             return ResponseEntity.ok(attachmentService.updateImage(imageId,image));
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);

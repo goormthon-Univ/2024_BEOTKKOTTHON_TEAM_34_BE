@@ -4,6 +4,7 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.groom.Kkri.config.S3Config;
 import com.groom.Kkri.dto.attach.AttachmentOutputDto;
+import com.groom.Kkri.dto.attach.AttachmentUpdateDto;
 import com.groom.Kkri.entity.Attachment;
 import com.groom.Kkri.entity.Board;
 import com.groom.Kkri.repository.AttachmentRepository;
@@ -39,7 +40,7 @@ public class AttachmentService {
         return fileDir + filename;
     }
 
-    @Transactional
+//    @Transactional
     public List<String> storeImages(List<MultipartFile> multipartFiles, Long boardId) throws IOException {
         List<String> result = new ArrayList<>();
         for(var s : multipartFiles){
@@ -49,23 +50,35 @@ public class AttachmentService {
     }
 
     public List<AttachmentOutputDto> getImages(Long boardId){
-//        List<AttachmentOutputDto> result = new ArrayList<>();
-//        for (Attachment attachment : attachmentRepository.findByBoardId(boardId)) {
-//            result.add(new AttachmentOutputDto(attachment));
-//        }
 
         List<AttachmentOutputDto> result = new ArrayList<>();
         for (Attachment attachment : attachmentRepository.findByBoardId(boardId)) {
-//            File file = new File(getFullPath(attachment.getUploadFileName()));
-//            String s3Url = getS3Url(attachment.getUploadFileName(), file);
             result.add(new AttachmentOutputDto(attachment.getId(),attachment.getS3url()));
         }
 
-
         return result;
     }
+    public AttachmentOutputDto getImage(Long boardId){
 
-    @Transactional
+        List<Attachment> attachments = attachmentRepository.findByBoardId(boardId);
+
+        if(attachments.isEmpty()){
+            return null;
+        }
+
+        Attachment attachment = attachments.get(0);
+
+        return new AttachmentOutputDto(attachment.getId(), attachment.getS3url());
+    }
+
+    public List<String> updateImages(List<AttachmentUpdateDto> images) throws IOException {
+        List<String> result = new ArrayList<>();
+        for(var s :images){
+            result.add(updateImage(s.getImageId(),s.getImage()));
+        }
+        return result;
+    }
+//    @Transactional
     public String updateImage(Long imageId,MultipartFile image) throws IOException {
         Attachment attachment = attachmentRepository.findById(imageId).get();
 

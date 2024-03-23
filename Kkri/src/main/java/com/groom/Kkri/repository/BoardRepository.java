@@ -23,13 +23,12 @@ public interface BoardRepository extends JpaRepository<Board,Long> {
     @Query("select b from Board b where b.type = :type and b.state != com.groom.Kkri.enums.State.POST_DEAL")
     Slice<Board> findByBoardLimit5(@Param("type") Type type, Pageable pageable);
 
-    @Query("select b from Board b join fetch b.member m where m.username = :username and b.type = :type")
-    Slice<Board> findByUserBoard(@Param("username") String username, @Param("type")Type type, Pageable pageable);
+    @Query("select b from Board b join fetch b.member m where m.id = :userId and b.type = :type")
+    Slice<Board> findByUserBoard(@Param("userId") Long userId, @Param("type")Type type, Pageable pageable);
 
     @Query("select b from Board b where (b.title like %:title% or b.description like %:description%) and b.state != com.groom.Kkri.enums.State.POST_DEAL")
     Slice<Board> findByTitleContainingOrDescriptionContaining(@Param("title") String tile, @Param("description")String description, Pageable pageable);
 
     void deleteById(Long id);
 
-    List<Board> findByType(Type type);
 }
