@@ -9,12 +9,12 @@ import lombok.NoArgsConstructor;
 public class ChatCreateDto {
     Long chatRoomId;
     Long senderId;
-    String message;
+    String content;
 
     @Builder
     public ChatCreateDto(Long chatRoomId, Long senderId, String message){
         this.chatRoomId = chatRoomId;
         this.senderId = senderId;
-        this.message = message;
+        this.content = message;
     }
 }

@@ -78,8 +78,8 @@ public class MemberController {
 
     @Operation(summary = "마이페이지 조회 api")
     @GetMapping("/{username}/mypage")
-    public BaseResponse<MyPageDto> myPage(@PathVariable("username") String username) {
-        Optional<MyPageDto> myPageDtoOptional = memberService.getMyPageInfo(username);
+    public BaseResponse<MyPageDto> myPage(@PathVariable("username") Long userId) {
+        Optional<MyPageDto> myPageDtoOptional = memberService.getMyPageInfo(userId);
 
         return myPageDtoOptional.map(BaseResponse::response)
                 .orElse(new BaseResponse<>(HttpStatus.NOT_FOUND, "마이페이지를 찾을 수 없습니다.", null));
