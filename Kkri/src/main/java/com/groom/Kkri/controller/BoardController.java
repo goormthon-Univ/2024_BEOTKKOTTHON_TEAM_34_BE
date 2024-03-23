@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/board")
@@ -72,8 +73,12 @@ public class BoardController {
 
     @Operation(summary = "게시판 수정 api")
     @PutMapping(value = "/{boardId}",consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
-    public BaseResponse<?> updateBoard(@PathVariable("boardId")Long boardId, @RequestPart(value = "boardUpdateDto") BoardUpdateDto boardUpdateDto,@RequestPart(value = "images") List<AttachmentUpdateDto> images) throws IOException {
-        //boardService.updateBoard(boardId,boardUpdateDto,images);
+    public BaseResponse<?> updateBoard(@PathVariable("boardId")Long boardId, @RequestPart(value = "boardUpdateDto") BoardUpdateDto boardUpdateDto,@RequestParam Map<String,MultipartFile> images) throws IOException {
+        System.out.println(boardUpdateDto);
+        for(var s : images.keySet()){
+            System.out.println(s + " " + images.get(s));
+        }
+        boardService.updateBoard(boardId,boardUpdateDto,images);
         return BaseResponse.response("success");
     }
 

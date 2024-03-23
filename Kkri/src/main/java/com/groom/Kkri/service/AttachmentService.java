@@ -13,12 +13,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -71,10 +73,11 @@ public class AttachmentService {
         return new AttachmentOutputDto(attachment.getId(), attachment.getS3url());
     }
 
-    public List<String> updateImages(List<AttachmentUpdateDto> images) throws IOException {
+    public List<String> updateImages(Map<String,MultipartFile> images) throws IOException {
         List<String> result = new ArrayList<>();
-        for(var s :images){
-            result.add(updateImage(s.getImageId(),s.getImage()));
+        for(var s :images.keySet()){
+            Long key = Long.parseLong(s);
+            result.add(updateImage(key,images.get(s)));
         }
         return result;
     }
@@ -86,9 +89,11 @@ public class AttachmentService {
 
         File file = new File(getFullPath(attachment.getUploadFileName()));
         image.transferTo(file);
-        file.delete();
 
         String s3Url = getS3Url(attachment.getUploadFileName(), file);
+
+        file.delete();
+
         attachment.setS3url(s3Url);
         return s3Url;
     }
