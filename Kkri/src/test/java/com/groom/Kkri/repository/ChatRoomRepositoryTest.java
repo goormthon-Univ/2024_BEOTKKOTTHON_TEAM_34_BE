@@ -38,7 +38,7 @@ class ChatRoomRepositoryTest {
 
 
 
-        ChatRoom room = chatRoomRepository.findByChatRoom(9L, 4L);
+        ChatRoom room = chatRoomRepository.findByChatRoom(9L, 4L).get();
 
         System.out.println(room);
     }
