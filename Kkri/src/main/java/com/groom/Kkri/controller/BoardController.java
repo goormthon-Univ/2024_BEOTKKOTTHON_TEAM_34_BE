@@ -1,5 +1,6 @@
 package com.groom.Kkri.controller;
 
+import com.groom.Kkri.dto.BaseResponse;
 import com.groom.Kkri.dto.BoardPageDto;
 import com.groom.Kkri.entity.Board;
 import com.groom.Kkri.enums.State;
@@ -26,13 +27,25 @@ public class BoardController {
 
     private final BoardService boardService;
 
+//    @Operation(summary = "게시판을 불러오는 api", description = "")
+//    @GetMapping("/{type}")
+//    public ResponseEntity<BoardPageDto> getBoard(@PathVariable("type") Type type, @PageableDefault(size = 5, sort = "createdDate",
+//            direction = Sort.Direction.DESC)Pageable pageable)
+//    {
+//        return ResponseEntity.ok(boardService.getBoard(type,pageable));
+//    }
+
+
     @Operation(summary = "게시판을 불러오는 api", description = "")
     @GetMapping("/{type}")
-    public ResponseEntity<BoardPageDto> getBoard(@PathVariable("type") Type type, @PageableDefault(size = 5, sort = "createdDate",
+    public BaseResponse<BoardPageDto> getBoard(@PathVariable("type") Type type, @PageableDefault(size = 5, sort = "createdDate",
             direction = Sort.Direction.DESC)Pageable pageable)
     {
-        return ResponseEntity.ok(boardService.getBoard(type,pageable));
+        return BaseResponse.response(boardService.getBoard(type,pageable));
+        //return new BaseResponse<>(HttpStatus.OK,"success",boardService.getBoard(type,pageable));
     }
+
+
     @Operation(summary = "게시글 작성 api", description = "")
     @PostMapping("/{type}")
     public ResponseEntity<Board> writePost(@PathVariable Type type, @RequestBody Board board) {

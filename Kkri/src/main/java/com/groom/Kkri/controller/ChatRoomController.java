@@ -1,5 +1,6 @@
 package com.groom.Kkri.controller;
 
+import com.groom.Kkri.dto.BaseResponse;
 import com.groom.Kkri.dto.chatroom.ChatRoomDetailDto;
 import com.groom.Kkri.dto.chatroom.ChatRoomSimpleDto;
 import com.groom.Kkri.service.ChatRoomService;
@@ -24,26 +25,26 @@ public class ChatRoomController {
 
     @GetMapping("/chatroom/board")
     @Operation(summary = "board와 관련 채팅룸 요청")
-    public ChatRoomDetailDto getChatByBoardIdAndSenderId(@RequestParam("boardId")Long boardId , @RequestParam("senderId")Long senderId){
-        return chatRoomService.getChatRoomSendId(boardId, senderId);
+    public BaseResponse<ChatRoomDetailDto> getChatByBoardIdAndSenderId(@RequestParam("boardId")Long boardId , @RequestParam("senderId")Long senderId){
+        return BaseResponse.response(chatRoomService.getChatRoomSendId(boardId, senderId));
     }
 
     @GetMapping("/chatroom/room")
     @Operation(summary = "roomid 관련 채팅룸 요청")
-    public ChatRoomDetailDto getChatByRoomId(@RequestParam("roomId")Long roomId , @RequestParam("userId")Long userId){
-        return chatRoomService.getChatRoom(roomId,userId);
+    public BaseResponse<ChatRoomDetailDto> getChatByRoomId(@RequestParam("roomId")Long roomId , @RequestParam("userId")Long userId){
+        return BaseResponse.response(chatRoomService.getChatRoom(roomId,userId));
     }
 
     @GetMapping("/chatroom/list/user")
     @Operation(summary = "user애 관한 채팅룸 리스트 관련 채팅 요청")
-    public List<ChatRoomSimpleDto> getChatRoomsByUserId(@RequestParam("userId") Long userId){
-        return chatRoomService.getChatRoomByUserId(userId);
+    public BaseResponse<List<ChatRoomSimpleDto>> getChatRoomsByUserId(@RequestParam("userId") Long userId){
+        return BaseResponse.response(chatRoomService.getChatRoomByUserId(userId));
     }
 
     @GetMapping("/chatroom/list/board")
     @Operation(summary = "board와 관련 채팅룸 리스트 요청")
-    public List<ChatRoomSimpleDto> getChatRoom(@RequestParam("boardId") Long boardId, @RequestParam("userId") Long userId){
-        return chatRoomService.getChatRoomByBoardId(boardId,userId);
+    public BaseResponse<List<ChatRoomSimpleDto>> getChatRoom(@RequestParam("boardId") Long boardId, @RequestParam("userId") Long userId){
+        return BaseResponse.response(chatRoomService.getChatRoomByBoardId(boardId,userId));
     }
 
 }
