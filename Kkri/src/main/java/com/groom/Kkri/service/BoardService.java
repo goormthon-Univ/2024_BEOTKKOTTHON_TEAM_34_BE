@@ -15,11 +15,13 @@ import com.groom.Kkri.repository.BoardRepository;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 
@@ -74,12 +76,12 @@ public class BoardService {
     }
 
     @Transactional
-    public void updateBoard(Long boardId, BoardUpdateDto boardUpdateDto, List<AttachmentUpdateDto> attachmentUpdateDtos) throws IOException {
+    public void updateBoard(Long boardId, BoardUpdateDto boardUpdateDto, Map<String,MultipartFile> images) throws IOException {
         Board board = boardRepository.findById(boardId).get();
 
         board.updateBoard(boardUpdateDto.getTitle(),boardUpdateDto.getDescription(),boardUpdateDto.getExchangePoint());
 
-        attachmentService.updateImages(attachmentUpdateDtos);
+        attachmentService.updateImages(images);
 
     }
 
