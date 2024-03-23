@@ -1,4 +1,4 @@
-package com.groom.Kkri.dto;
+package com.groom.Kkri.dto.member;
 
 import com.groom.Kkri.entity.Member;
 import lombok.*;
@@ -8,7 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class MemberDTO {
+public class MemberDto {
 
     private Long id;
     private String username;
@@ -18,8 +18,8 @@ public class MemberDTO {
     private Long consumePoint;
     private Long earnPoint;
 
-    public static MemberDTO from(Member member) {
-        return new MemberDTO(
+    public static MemberDto from(Member member) {
+        return new MemberDto(
                 member.getId(),
                 member.getUsername(),
                 member.getNickname(),

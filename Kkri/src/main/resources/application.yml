@@ -24,3 +24,6 @@ spring:
       file-size-threshold: 1MB
 logging.level:
     org.hibernate.SQL: debug
+
+server:
+  port: 8001
