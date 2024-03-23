@@ -42,7 +42,7 @@ public class AttachmentService {
         return fileDir + filename;
     }
 
-    @Transactional
+//    @Transactional
     public List<String> storeImages(List<MultipartFile> multipartFiles, Long boardId) throws IOException {
         List<String> result = new ArrayList<>();
         for(var s : multipartFiles){
