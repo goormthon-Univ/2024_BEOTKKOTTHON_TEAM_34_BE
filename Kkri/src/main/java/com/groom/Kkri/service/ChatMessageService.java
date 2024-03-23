@@ -3,10 +3,8 @@ package com.groom.Kkri.service;
 import com.groom.Kkri.dto.message.ChatMessageDto;
 import com.groom.Kkri.dto.message.ChatCreateDto;
 import com.groom.Kkri.dto.message.ChatMsgAndRoomDto;
-import com.groom.Kkri.entity.Board;
 import com.groom.Kkri.entity.ChatMessage;
 import com.groom.Kkri.entity.ChatRoom;
-import com.groom.Kkri.repository.BoardRepository;
 import com.groom.Kkri.repository.ChatMessageRepository;
 import com.groom.Kkri.repository.ChatRoomRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -40,12 +37,12 @@ public class ChatMessageService {
         ChatMessage chatMessage = ChatMessage.builder()
                 .chatRoom(chatRoom)
                 .senderId(chatCreateDto.getSenderId())
-                .content(chatCreateDto.getMessage())
+                .content(chatCreateDto.getContent())
                 .build();
 
         chatMessageRepository.save(chatMessage);
 
-        chatRoom.updateLatestMessage(chatCreateDto.getMessage());
+        chatRoom.updateLatestMessage(chatCreateDto.getContent());
 
         return new ChatMessageDto(chatMessage);
     }

@@ -63,11 +63,10 @@ public class MemberService {
     }
 
 
-    public Optional<MyPageDto> getMyPageInfo(String username) {
-        // loginId를 사용하여 해당 사용자의 정보를 데이터베이스에서 조회
-        Optional<Member> memberOptional = memberRepository.findByUsername(username);
+    public Optional<MyPageDto> getMyPageInfo(Long userId) {
 
-        // 사용자 정보가 존재할 경우 MyPageDto로 변환하여 Optional로 반환
+        Optional<Member> memberOptional = memberRepository.findById(userId);
+
         return memberOptional.map(member -> MyPageDto.builder()
                 .nickname(member.getNickname())
                 .univ(member.getUniv())

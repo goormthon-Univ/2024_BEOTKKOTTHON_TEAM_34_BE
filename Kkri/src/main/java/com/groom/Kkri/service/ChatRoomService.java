@@ -113,6 +113,18 @@ public class ChatRoomService {
         return result;
     }
 
+    public Long createRoom(Long boardId, Long senderId){
+        Board board = boardRepository.findById(boardId).get();
+        Member member = memberRepository.findById(senderId).get();
+
+        ChatRoom room = ChatRoom.builder()
+                .sender(member)
+                .board(board)
+                .build();
+        ChatRoom save = chatRoomRepository.save(room);
+        return save.getId();
+    }
+
 
 
     public ChatRoom createRoom(ChatMsgAndRoomDto chatMsgAndRoomDto){
