@@ -1,11 +1,7 @@
 spring:
   application:
     name: Kkri
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://kkri.cp4iwmso4y1m.ap-northeast-2.rds.amazonaws.com:3306/Kkri
-    username: sa
-    password: 12341234
+
   jpa:
     hibernate:
       ddl-auto: update
@@ -20,14 +16,6 @@ spring:
       max-request-size: 100MB
       file-size-threshold: 1MB
 
-#s3
-cloud:
-  aws:
-    s3.bucket: kkribucket
-    stack.auto: false
-    region.static: ap-northeast-2
-    credentials.access-key: AKIA4MTWMMBG3TKJG5RT
-    credentials.secret-key: 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
 
 
 
